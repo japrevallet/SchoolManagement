@@ -73,7 +73,8 @@ namespace SchoolManagement.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> AddStudent([Bind(Include = "CourseID,StudentID")] Enrollment enrollment)
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> AddStudents ([Bind(Include = "CourseID,StudentID")] Enrollment enrollment)
         {
             try
             {
@@ -89,7 +90,6 @@ namespace SchoolManagement.Controllers
             }
             catch (Exception)
             {
-
                 return Json(new { IsSuccess = false, Message = "Error: Please contact Administrator" }, JsonRequestBehavior.AllowGet); ;
             }
         }
@@ -162,10 +162,9 @@ namespace SchoolManagement.Controllers
         {
             var students = db.Students.Select(q => new
             {
-                FullName = q.FirstName + " " + q.LastName, 
-                ID = q.StudentId
-
-            }).Where (q => q.FullName.Contains(term));
+                Name = q.FirstName + " " + q.LastName, 
+                Id = q.StudentId
+            }).Where (q => q.Name.Contains(term));
             return Json(students, JsonRequestBehavior.AllowGet);
         }
 
